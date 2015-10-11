@@ -137,7 +137,7 @@ planRoute <- function(aptFrom, aptTo, fixFrom=NA, fixTo=NA, fixes=character(), l
     rownames(result) <- NULL
     h <- as.integer(result$baseFL)*1000; h[is.na(h)] <- 0
     result$magdecl <- mapply(magvar, result$fixLat, result$fixLon, h)
-    result$magcourse <- result$course + result$magdecl
+    result$magcourse <- result$course - result$magdecl
     result$magcourse[result$magcourse>360] <- result$magcourse[result$magcourse>360] - 360
     result$magcourse[result$magcourse<0] <- result$magcourse[result$magcourse<0] + 360
     result[,c(1:12,14,15,13)] # Rearrange columns so altawy comes last

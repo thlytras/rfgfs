@@ -18,9 +18,9 @@ both true and magnetic course for every leg.
 
 Open R, and give:
 
-      devtools::install_github("rfgfs")
+      devtools::install_git("https://github.com/thlytras/rfgfs.git")
 
-If you do not have package "devtools", install it from CRAN with:
+If you do not have the package "devtools", first install it from CRAN with:
 
       install.packages("devtools")
 
