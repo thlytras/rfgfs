@@ -37,6 +37,6 @@ is.apt <- function(x) {
 #' @return A data.frame of airports found, with columns: "icaoCode", "fullName", "elevation", "lat", "lon".
 #' @export
 findApt <- function(x) {
-  fltData$apt[unique(c(grep(x, fltData$apt$fullName, ignore.case=TRUE), grep(x, fltData$apt$icaoCode, ignore.case=TRUE)))]
+  fltData$apt[unique(c(grep(x, fltData$apt$fullName, ignore.case=TRUE), grep(x, fltData$apt$icaoCode, ignore.case=TRUE))),]
 }
 

@@ -7,19 +7,19 @@
 magvar(lat, lon, h = 0, date = Sys.Date())
 }
 \arguments{
-\item{lat}{}
+\item{lat}{Latitude (North is positive)}
 
-\item{lon}{}
+\item{lon}{Longitude (East is positive)}
 
-\item{h}{}
+\item{h}{Height, in feet}
 
-\item{date}{}
+\item{date}{Date (as a Date object). Defaults to current date.}
 }
 \value{
 Returns the magnetic declination (in degrees) for the specified latitude, longitude and height.
 }
 \description{
-The function \code{magvar} calculates the magnetic declination for a given latitude, longitude and height, using the NIMA WMM2005 (World Magnetic Model). This is the same algorithm that FlightGear (via the SimGear algorithm) uses.
+Calculates the magnetic declination for a given latitude, longitude and height.
 }
 \details{
 This function uses the NIMA WMM2005 (World Magnetic Model). This is the exact same algorithm that FlightGear (via the SimGear library) uses, and in fact \code{magvar} is a port of the corresponding SimGear C++ function: \url{https://github.com/FlightGear/simgear/blob/next/simgear/magvar/coremag.cxx}

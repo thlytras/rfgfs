@@ -93,13 +93,13 @@ planRoute <- function(aptFrom, aptTo, fixFrom=NA, fixTo=NA, fixes=character(), l
 	v <- subset(fltData$nav$VORDME, id==result$fix[i])
 	if (nrow(v)>1) {
 	  dist <- spDistsN1(cbind(v$lon, v$lat), cbind(result$fixLon[i], result$fixLat[i]))
-	  v <- v[dist==min(dist),]
+	  v <- v[dist==min(dist),][1,]
 	}
 	if (nrow(v)==0) {
 	  v <- subset(fltData$nav$NDB, id==result$fix[i])
 	  if (nrow(v)>1) {
 	    dist <- spDistsN1(cbind(v$lon, v$lat), cbind(result$fixLon[i], result$fixLat[i]))
-	    v <- v[dist==min(dist),]
+	    v <- v[dist==min(dist),][1,]
 	  }
 	  if (nrow(v)>0) return(list(freq=v$freq, range=v$range, fullName=v$name, elevation=v$elev))
 	} else {

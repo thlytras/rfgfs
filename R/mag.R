@@ -1,11 +1,11 @@
 #' Calculate magnetic declination for a given coordinates
 #'
-#' The function \code{magvar} calculates the magnetic declination for a given latitude, longitude and height, using the NIMA WMM2005 (World Magnetic Model). This is the same algorithm that FlightGear (via the SimGear algorithm) uses.
+#' Calculates the magnetic declination for a given latitude, longitude and height.
 #'
-#' @param lat 
-#' @param lon
-#' @param h 
-#' @param date
+#' @param lat Latitude (North is positive)
+#' @param lon Longitude (East is positive)
+#' @param h Height, in feet
+#' @param date Date (as a Date object). Defaults to current date.
 #'
 #' @details This function uses the NIMA WMM2005 (World Magnetic Model). This is the exact same algorithm that FlightGear (via the SimGear library) uses, and in fact \code{magvar} is a port of the corresponding SimGear C++ function: \url{https://github.com/FlightGear/simgear/blob/next/simgear/magvar/coremag.cxx}
 #'
@@ -113,5 +113,23 @@ magvar <- function(lat, lon, h=0, date=Sys.Date())
     # E is positive
     if (X==0 && Y==0) return(0)
     return(atan2(Y, X)*180/pi)
+}
+
+
+#' Calculate magnetic declination at a given airport
+#'
+#' Calculates magnetic declination at a given airport 
+#'
+#' @param x A 4-letter ICAO airport code
+#' @param date Date (as a Date object). Defaults to current date.
+#'
+#' @details This function calls \code{\link{magvar}}, which uses the NIMA WMM2005 (World Magnetic Model). This is the exact same algorithm that FlightGear (via the SimGear library) uses, and in fact \code{magvar} is a port of the corresponding SimGear C++ function: \url{https://github.com/FlightGear/simgear/blob/next/simgear/magvar/coremag.cxx}
+#'
+#' @return Returns the magnetic declination (in degrees) at the specified airport.
+#' @export
+magvar_apt <- function(x, date=Sys.Date()) {
+    if (!is.apt(x)) stop("Airport was not found in the database.")
+    apt <- fltData$apt[x,]
+    magvar(apt$lat, apt$lon, apt$elevation, date=date)
 }
 
