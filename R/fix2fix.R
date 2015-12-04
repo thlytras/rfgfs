@@ -1,6 +1,6 @@
 #' Find the shortest route between two navfixes/navaids
 #'
-#' This function determines the shortest route between two points (navfixes/navaids) 
+#' This function determines the shortest route between two points (navfixes/navaids)
 #'
 #' @param startFix Identifier for departure navfix/navaid.
 #' @param endFix Identifier for destination navfix/navaid.
@@ -9,7 +9,7 @@
 #' @return Returns a vector of identifiers corresponding to the determined route.
 fix2fix <- function(startFix, endFix, limitArc=TRUE, narrowArc=FALSE) {
 # Determine difference of two angles (in radians)
-    angDiff <- function(a, b) {
+    angDiffR <- function(a, b) {
         d <- a-b
         d[d>pi] <- d[d>pi]-(2*pi)
         d
@@ -28,14 +28,14 @@ fix2fix <- function(startFix, endFix, limitArc=TRUE, narrowArc=FALSE) {
     curdist <- 0	# visited[length(visited)] is the current node
 # Iterate
     while(TRUE) {
-    curAngle <- gcb(subset(fltData$pts, id==visited[length(visited)])$fixLat, 
+    curAngle <- gcb(subset(fltData$pts, id==visited[length(visited)])$fixLat,
         subset(fltData$pts, id==visited[length(visited)])$fixLon,
-        subset(fltData$pts, id==endFix)$fixLat, subset(fltData$pts, id==endFix)$fixLon)
+        subset(fltData$pts, id==endFix)$fixLat, subset(fltData$pts, id==endFix)$fixLon) * pi/180
     a <- subset(fltData$dists, id1==visited[length(visited)])	# Get distances to all neighbours...
     a <- subset(a, !(id2 %in% visited))	# ...provided not already visited
     if (limitArc) {
-        if (narrowArc) b <- subset(a, abs(angDiff(course, curAngle))<(pi/4))	# Filter out nodes
-        if (!narrowArc || nrow(b)==0) b <- subset(a, abs(angDiff(course, curAngle))<(pi/2))	# Filter out nodes
+        if (narrowArc) b <- subset(a, abs(angDiffR(course, curAngle))<(pi/4))	# Filter out nodes
+        if (!narrowArc || nrow(b)==0) b <- subset(a, abs(angDiffR(course, curAngle))<(pi/2))	# Filter out nodes
         if (nrow(b)==0) b <- a	# Filter out nodes
         a <- b
     }
@@ -58,6 +58,35 @@ fix2fix <- function(startFix, endFix, limitArc=TRUE, narrowArc=FALSE) {
 }
 
 
-# Great circle bearing
-gcb <- function(lat1, lon1, lat2, lon2) atan2(sin((lon2-lon1)*pi/180)*cos(lat2*pi/180), 
-    cos(lat1*pi/180)*sin(lat2*pi/180)-sin(lat1*pi/180)*cos(lat2*pi/180)*cos((lon2-lon1)*pi/180)) %% (2*pi)
+
+#' Find the initial course for an orthodromic route
+#'
+#' This function returs the initial course heading (in degrees) for an orthodromic course between two points.
+#'
+#' @param lat1 Latitude of departure point
+#' @param lon1 Longitude of departure point
+#' @param lat2 Latitude of destination point
+#' @param lon2 Longitude of destination point
+#' @return Returns the initial orthodromic course in degrees.
+#'
+#' @export
+gcb <- function(lat1, lon1, lat2, lon2) (atan2(sin((lon2-lon1)*pi/180)*cos(lat2*pi/180),
+    cos(lat1*pi/180)*sin(lat2*pi/180)-sin(lat1*pi/180)*cos(lat2*pi/180)*cos((lon2-lon1)*pi/180)) %% (2*pi)) * 180/pi
+
+
+
+#' Determine difference between two course headings
+#'
+#' This function returs the difference (in degrees) between two course headings.
+#' A negative sign means that a is to the left of b, a positive sign means that a is to the right of b.
+#' Obviously the two course headings should be on the same reference, e.g. both magnetic or both true.
+#'
+#' @param a,b Course headings, in degrees
+#' @return The difference a - b, in degrees
+#'
+#' @export
+courseDiff <- function(a, b) {
+  d <- (a - b) %% 360
+  sign <- ifelse((a-b>=0 & a-b<=180) | (a-b<=-180 & a-b>=-360), 1, -1)
+  ifelse(d>180, 360-d, d)*sign
+}

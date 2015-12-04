@@ -1,6 +1,6 @@
 #' Create a flight plan route between two airports.
 #'
-#' This function determines the shortest route between two points (navfixes/navaids) 
+#' This function determines the shortest route between two points (navfixes/navaids)
 #'
 #' @param aptFrom Departure airport (4-letter ICAO code).
 #' @param aptTo Destination airport (4-letter ICAO code).
@@ -29,7 +29,7 @@
 #' @export
 planRoute <- function(aptFrom, aptTo, fixFrom=NA, fixTo=NA, fixes=character(), limitArc=TRUE, narrowArc=FALSE) {
   # This function is based on Djisktra's algorithm. fltData must be loaded
-  
+
   # Initial sanity checks, and determine initial and final fixes
     aptFrom <- gsub("^\\s+|\\s+$", "", aptFrom)
     aptTo <- gsub("^\\s+|\\s+$", "", aptTo)
@@ -67,7 +67,7 @@ planRoute <- function(aptFrom, aptTo, fixFrom=NA, fixTo=NA, fixes=character(), l
             nextfixes <- subset(fltData$pts, fix==fixes[i])
             if (nrow(nextfixes)==0) stop(paste("Could not find", fixes[i], "in the database.\n"))
             if (nrow(nextfixes)>1) {
-                nextfixes$dist <- spDistsN1(cbind(nextfixes$fixLon,nextfixes$fixLat), 
+                nextfixes$dist <- spDistsN1(cbind(nextfixes$fixLon,nextfixes$fixLat),
                         as.matrix(fltData$pts[match(fixes[i-1], fltData$pts$id),c("fixLon","fixLat")]), longlat=TRUE)
                 nextfixes <- subset(nextfixes, dist==min(dist))
             }
@@ -81,11 +81,11 @@ planRoute <- function(aptFrom, aptTo, fixFrom=NA, fixTo=NA, fixes=character(), l
       if (nrow(routeAwys[[i]])>1) {
         awy_to_keep <- which(routeAwys[[i]]$awy==routeAwys[[2]]$awy)[1]
         if (is.na(awy_to_keep)) awy_to_keep <- with(routeAwys[[i]], which(topFL==max(topFL)))[1]
-	routeAwys[[i]]$altawy <- with(routeAwys[[i]][-awy_to_keep,], 
+	routeAwys[[i]]$altawy <- with(routeAwys[[i]][-awy_to_keep,],
 	  paste(paste(awy, "@FL", baseFL, "-FL", topFL, sep=""), collapse=", "))
 	routeAwys[[i]] <- routeAwys[[i]][awy_to_keep,]
       } else { routeAwys[[i]]$altawy <- NA }
-    } 
+    }
     routeAwys <- do.call(rbind, routeAwys)
     routeAwys$course <- routeAwys$course*180/pi
     navFreqs <- lapply(1:nrow(result), function(i) {
@@ -115,23 +115,23 @@ planRoute <- function(aptFrom, aptTo, fixFrom=NA, fixTo=NA, fixes=character(), l
     result$elevation <- as.integer(result$elevation)
     result <- result[,c("fix", "freq", "range", "fullName", "fixLat","fixLon", "elevation")]
     routeAwys <- routeAwys[,c("awy", "dist", "baseFL", "topFL", "course", "altawy")]
-    endRoute <- unlist(cbind(subset(fltData$pts, id == endFix)[c("fixLat", "fixLon")], 
+    endRoute <- unlist(cbind(subset(fltData$pts, id == endFix)[c("fixLat", "fixLon")],
 	subset(fltData$apt, icaoCode==aptTo)[c("lat", "lon")]))
     names(endRoute) <- c("lat1", "lon1", "lat2", "lon2")
-    startRoute <- unlist(cbind(subset(fltData$apt, icaoCode==aptFrom)[c("lat", "lon")], 
+    startRoute <- unlist(cbind(subset(fltData$apt, icaoCode==aptFrom)[c("lat", "lon")],
 	subset(fltData$pts, id == startFix)[c("fixLat", "fixLon")]))
     names(startRoute) <- c("lat1", "lon1", "lat2", "lon2")
-    routeAwys <- rbind(routeAwys, c("STAR", 
-	spDistsN1(t(endRoute[2:1]), t(endRoute[4:3]), longlat=TRUE), 
-	NA, NA, do.call(gcb, as.list(endRoute))*180/pi, NA))
+    routeAwys <- rbind(routeAwys, c("STAR",
+	spDistsN1(t(endRoute[2:1]), t(endRoute[4:3]), longlat=TRUE),
+	NA, NA, do.call(gcb, as.list(endRoute)), NA))
     result <- cbind(result, routeAwys)
     result <- result[c(NA, 1:nrow(result), NA), ]
     result$dist <- as.numeric(result$dist)
     result$course <- as.numeric(result$course)
     result[1,] <- list(aptFrom, NA, NA, subset(fltData$apt, icaoCode==aptFrom)$fullName, startRoute[1],
-            startRoute[2], subset(fltData$apt, icaoCode==aptFrom)$elevation, "SID", 
-	    spDistsN1(t(startRoute[2:1]), t(startRoute[4:3]), longlat=TRUE), NA, NA, 
-	    do.call(gcb, as.list(startRoute))*180/pi, NA)
+            startRoute[2], subset(fltData$apt, icaoCode==aptFrom)$elevation, "SID",
+	    spDistsN1(t(startRoute[2:1]), t(startRoute[4:3]), longlat=TRUE), NA, NA,
+	    do.call(gcb, as.list(startRoute)), NA)
     result[nrow(result),] <- list(aptTo, NA, NA, subset(fltData$apt, icaoCode==aptTo)$fullName,
             endRoute[3], endRoute[4], subset(fltData$apt, icaoCode==aptTo)$elevation, NA, NA, NA, NA, NA, NA)
     rownames(result) <- NULL

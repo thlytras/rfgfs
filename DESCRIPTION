@@ -1,7 +1,7 @@
 Package: rfgfs
 Type: Package
 Title: Flight planner and companion package for FlightGear
-Version: 0.0.1
+Version: 0.0.2
 Date: 2015-10-08
 Author: Theodore Lytras
 Maintainer: Theodore Lytras <thlytras@gmail.com>
