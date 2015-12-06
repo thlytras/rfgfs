@@ -5,7 +5,14 @@ Version: 0.0.2
 Date: 2015-10-08
 Author: Theodore Lytras
 Maintainer: Theodore Lytras <thlytras@gmail.com>
-Depends: sp
-Description: Automatically plans a route between two airports, using the airport, airway, navaid and navfix data that ship with FlightGear, and writes this flight plan to a csv or kml file (that can be opened with Google Earth). Also calculates magnetic declination for given coordinates and altitude, using the same formula that FlightGear (via SimGear) uses. FOR FLIGHT SIMULATION USE ONLY - NOT FOR REAL WORLD NAVIGATION.
+Depends:
+    sp
+Description: Automatically plans a route between two airports, using the
+    airport, airway, navaid and navfix data that ship with FlightGear, and writes
+    this flight plan to a csv or kml file (that can be opened with Google Earth).
+    Also calculates magnetic declination for given coordinates and altitude, using
+    the same formula that FlightGear (via SimGear) uses. FOR FLIGHT SIMULATION USE
+    ONLY - NOT FOR REAL WORLD NAVIGATION.
 License: GPL (>=2)
 LazyData: TRUE
+RoxygenNote: 5.0.1

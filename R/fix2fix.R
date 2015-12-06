@@ -90,3 +90,52 @@ courseDiff <- function(a, b) {
   sign <- ifelse((a-b>=0 & a-b<=180) | (a-b<=-180 & a-b>=-360), 1, -1)
   ifelse(d>180, 360-d, d)*sign
 }
+
+
+
+#' Find navigational fix(es) by name
+#'
+#' This function finds navigational fixes (fixes or navaids) by name (id). If there are many fixes
+#' with the same name, they are all returned unless an optional reference point is supplied, in which
+#' case only the fix nearest to the reference point is returned.
+#'
+#' @param x Fix id to search for.
+#' @param refPoint Optional reference point. A list containing elements \code{lat} and \code{lon},
+#' holding the latitude and longitude in degrees.
+#' @return A data.frame (with zero rows if no fix is found) with columns \code{lat}, \code{lon}, \code{elev},
+#' \code{freq}, \code{range}, \code{id}, \code{name}, \code{type}.
+#'
+#' @export
+findFixes <- function(x, refPoint=NULL) {
+  fix <- subset(fltData$fix, fix==x)
+  navNDB <- subset(fltData$nav$NDB, id==x)
+  navVOR <- subset(fltData$nav$VOR, id==x)
+  navTACAN <- subset(fltData$nav$TACAN, id==x)
+  navRSBN <- subset(fltData$nav$RSBN, id==x)
+  if (nrow(fix)==0) fix[1,] <- rep(NA, ncol(fix))
+  if (nrow(navNDB)==0) navNDB[1,] <- rep(NA, ncol(navNDB))
+  if (nrow(navVOR)==0) navVOR[1,] <- rep(NA, ncol(navVOR))
+  if (nrow(navTACAN)==0) navTACAN[1,] <- rep(NA, ncol(navTACAN))
+  if (nrow(navRSBN)==0) navRSBN[1,] <- rep(NA, ncol(navRSBN))
+  names(fix)[3] <- "id"
+  fix$elev <- NA; fix$freq <- NA; fix$range <- NA; fix$name <- NA
+  fix$type <- "fix"; navNDB$type <- "NDB";
+  navVOR$type <- "VOR"; navTACAN$type <- "TACAN"; navRSBN$type <- "RSBN"
+  fixes <- rbind(fix[,c(1:2, 4:6, 3, 7:8)], navNDB[,-6], navVOR[,-6],
+                 navTACAN[,-6], navRSBN[,-8])
+  fixes <- fixes[!is.na(fixes$lat),]
+  j <- c()
+  for(i in which(fixes$type == "TACAN")) {
+    if (length(which(abs(fixes$lat-fixes$lat[i])<0.01 & abs(fixes$lon-fixes$lon[i])<0.01 & fixes$type=="VOR"))>0) j <- c(j, i)
+  }
+  if (length(j)>0) fixes <- fixes[-j,]
+  if (nrow(fixes)>0 && !is.null(refPoint)) {
+    if (is.null(names(refPoint))) names(refPoint)[1:2] <- c("lat","lon")
+    dists <- mapply(function(lat, lon){
+      spDistsN1(cbind(lon, lat), cbind(refPoint$lon, refPoint$lat), longlat=TRUE)
+    }, fixes$lat, fixes$lon)
+    fixes <- fixes[which(dists==min(dists)),]
+  }
+  fixes
+}
+

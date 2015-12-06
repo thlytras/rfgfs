@@ -45,3 +45,49 @@ planNVU <- function(plan, points=NULL, cols=c("fix","fixLat","fixLon"), init.mag
 
 
 
+#' Calculate RSBN course correction
+#'
+#' This function returns the NVU course correction parameters (Zm, Sm, YK) given the latitude and longitude of
+#' the start point, the end point and the RSBN beacon.
+#'
+#' This function is used by \code{corrPlanRSBN()}.
+#'
+#' @param lat1,lon1 Latitude and longitude of the start point
+#' @param lat2,lon2 Latitude and longitude of the end point
+#' @param latB,lonB Latitude and longitude of the beacon
+#' @return A numeric vector of length 3, containing the values for Zm, Sm and YK.
+#'
+#' @export
+corrRSBN <- function(lat1, lon1, lat2, lon2, latB, lonB) {
+  crsAB <- gcb(lat1, lon1, lat2, lon2)
+  crsAD <- gcb(lat1, lon1, latB, lonB)
+  S <- -spDistsN1(cbind(lon1, lat1), cbind(lon2, lat2), longlat=TRUE)
+  A <- crsAB-crsAD
+  b <- (spDistsN1(cbind(lon1, lat1), cbind(lonB, latB), longlat=TRUE)/1.852) * (pi/(180*60))
+  Zm <- asin(sin(b)*sin(-A*pi/180))
+  Sm <- S + (1.852*60*180/pi) * atan2(sin(b)*cos(A*pi/180),cos(b))
+  Zm <- (1.852*60*180/pi) * Zm
+
+  #cat(acos(cos(b*pi/180)/cos(Zm)))
+  #cat(atan2(sin(b*pi/180)*cos(A*pi/180),cos(b*pi/180)))
+
+  f <- (Sm - S)/abs(S)
+  d <- (S/1.852)*(pi/(180*60))
+
+  A <- sin((1-f)*d)/sin(d)
+  B <- sin(f*d)/sin(d)
+  x <- A*cos(lat1*pi/180)*cos(lon1*pi/180) + B*cos(lat2*pi/180)*cos(lon2*pi/180)
+  y <- A*cos(lat1*pi/180)*sin(lon1*pi/180) + B*cos(lat2*pi/180)*sin(lon2*pi/180)
+  z <- A*sin(lat1*pi/180) + B*sin(lat2*pi/180)
+  lat <- atan2(z,sqrt(x^2+y^2))*180/pi
+  lon <- atan2(y,x)*180/pi
+  YK <- gcb(lat, lon, lat2, lon2)
+  if (Sm>0) YK <- (180 + YK) %% 360
+
+  c(
+    Zm = Zm,
+    Sm = Sm,
+    YK = YK
+  )
+}
+
