@@ -4,7 +4,8 @@
 \alias{findFixes}
 \title{Find navigational fix(es) by name}
 \usage{
-findFixes(x, refPoint = NULL)
+findFixes(x, refPoint = NULL, type = c("airport", "VOR", "TACAN", "NDB",
+  "RSBN"))
 }
 \arguments{
 \item{x}{Fix id to search for.}

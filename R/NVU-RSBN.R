@@ -19,9 +19,10 @@
 #' If \code{merge = TRUE} the above columns are added to the data.frame \code{plan}.
 #'
 #' @export
-planNVU <- function(plan, points=NULL, cols=c("fix","fixLat","fixLon"), init.mag=FALSE, merge=FALSE) {
+planNVU <- function(plan, points=NULL, cols=c("fix","fixLat","fixLon"), init.mag=FALSE, merge=TRUE) {
   if (is.null(points)) points <- 1:nrow(plan)
   if (sum(points<0)) points <- (1:nrow(plan))[points]
+  if (is.character(points)) points <- match(points, plan$fix)
   a <- plan[points, cols]
   names(a) <- c("fix","fixLat","fixLon")
   if (init.mag) da <- -magvar(a$fixLat[1], a$fixLon[1]) else da <- 0

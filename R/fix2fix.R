@@ -106,23 +106,29 @@ courseDiff <- function(a, b) {
 #' \code{freq}, \code{range}, \code{id}, \code{name}, \code{type}.
 #'
 #' @export
-findFixes <- function(x, refPoint=NULL) {
+findFixes <- function(x, refPoint=NULL, type=c("airport", "VOR", "TACAN","NDB", "RSBN")) {
   fix <- subset(fltData$fix, fix==x)
+  apt <- subset(fltData$apt, icaoCode==x)
   navNDB <- subset(fltData$nav$NDB, id==x)
   navVOR <- subset(fltData$nav$VOR, id==x)
   navTACAN <- subset(fltData$nav$TACAN, id==x)
   navRSBN <- subset(fltData$nav$RSBN, id==x)
   if (nrow(fix)==0) fix[1,] <- rep(NA, ncol(fix))
+  if (nrow(apt)==0) apt[1,] <- rep(NA, ncol(apt))
   if (nrow(navNDB)==0) navNDB[1,] <- rep(NA, ncol(navNDB))
   if (nrow(navVOR)==0) navVOR[1,] <- rep(NA, ncol(navVOR))
   if (nrow(navTACAN)==0) navTACAN[1,] <- rep(NA, ncol(navTACAN))
   if (nrow(navRSBN)==0) navRSBN[1,] <- rep(NA, ncol(navRSBN))
   names(fix)[3] <- "id"
-  fix$elev <- NA; fix$freq <- NA; fix$range <- NA; fix$name <- NA
-  fix$type <- "fix"; navNDB$type <- "NDB";
-  navVOR$type <- "VOR"; navTACAN$type <- "TACAN"; navRSBN$type <- "RSBN"
-  fixes <- rbind(fix[,c(1:2, 4:6, 3, 7:8)], navNDB[,-6], navVOR[,-6],
-                 navTACAN[,-6], navRSBN[,-8])
+  names(apt)[1] <- "id"; names(apt)[2] <- "name"; names(apt)[3] <- "elev"
+  fix$elev <- NA; fix$freq <- NA; fix$range <- NA;
+  fix$name <- NA; fix$dev <- 0; fix$type <- "fix"
+  apt$freq <- NA; apt$range <- NA; apt$dev <- 0; apt$type <- "airport"
+  navNDB$type <- "NDB"; navVOR$type <- "VOR"; navTACAN$type <- "TACAN"
+  navRSBN$dev <- 0; navRSBN$type <- "RSBN"
+  sel <- c("lat","lon","freq","range","elev","dev","id","name","type")
+  fixes <- rbind(fix[,sel], apt[,sel], navNDB[,sel],
+                 navVOR[,sel], navTACAN[,sel], navRSBN[,sel])
   fixes <- fixes[!is.na(fixes$lat),]
   j <- c()
   for(i in which(fixes$type == "TACAN")) {
@@ -136,6 +142,7 @@ findFixes <- function(x, refPoint=NULL) {
     }, fixes$lat, fixes$lon)
     fixes <- fixes[which(dists==min(dists)),]
   }
-  fixes
+  rownames(fixes) <- NULL
+  subset(fixes, type %in% type)
 }
 

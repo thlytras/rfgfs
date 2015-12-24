@@ -5,7 +5,7 @@
 \title{Obtain NVU navigational data for a flight plan}
 \usage{
 planNVU(plan, points = NULL, cols = c("fix", "fixLat", "fixLon"),
-  init.mag = FALSE, merge = FALSE)
+  init.mag = FALSE, merge = TRUE)
 }
 \arguments{
 \item{plan}{A flight plan, as a data.frame. Plans created with \code{\link{planRoute}}

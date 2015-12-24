@@ -26,17 +26,20 @@ planRoute(aptFrom, aptTo, fixFrom = NA, fixTo = NA, fixes = character(),
 Returns a flight plan stored on a data.frame with the following columns:
 \describe{
  \item{fix}{The name each point (airport/navaid/navfix) in the flight plan.}
- \item{freq}{Radio frequency (for navaids only).}
- \item{range}{Reception range (for navaids only).}
- \item{fullName}{Full name }
  \item{fixLat}{Latitude of the point.}
  \item{fixLon}{Longitude of the point.}
+ \item{fullName}{Full name }
+ \item{freq}{Radio frequency (for navaids only).}
+ \item{range}{Reception range (for navaids only).}
  \item{elevation}{Elevation (for navaids or airports).}
+ \item{dev}{Deviation (for VOR stations).}
+ \item{magdecl}{Magnetic declination at the point.}
+ \item{dist}{Distance (in km, up to the next point in the plan).}
+ \item{course}{Course (true) towards the next point.}
+ \item{magcourse}{Course (magnetic) towards the next point.}
  \item{awy}{Airway identifier for the following segment (up to the next point in the plan), or SID/STAR.}
- \item{dist}{Distance (in km) (up to the next point in the plan).}
  \item{baseFL}{Base flight level for the following segment (up to the next point in the plan).}
  \item{topFL}{Top flight level for the following segment (up to the next point in the plan).}
- \item{course}{Course (true) towards the next point.}
  \item{altawy}{Alternative airway for the following segment, along with its permitted flight level range.}
 }
 }
