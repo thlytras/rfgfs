@@ -132,7 +132,7 @@ planRoute <- function(aptFrom, aptTo, fixFrom=NA, fixTo=NA, fixes=character(), l
         lat = result$fixLat[i]
       ))
       if (nrow(fr)==0) fr[1,] <- NA
-      fr
+      fr[1,]
     }))
 
     navFreqs <- navFreqs[,c("name","freq","range","elev","dev")]

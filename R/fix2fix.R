@@ -143,6 +143,6 @@ findFixes <- function(x, refPoint=NULL, type=c("airport", "VOR", "TACAN","NDB", 
     fixes <- fixes[which(dists==min(dists)),]
   }
   rownames(fixes) <- NULL
-  subset(fixes, type %in% type)
+  fixes[fixes$type %in% type,]
 }
 
