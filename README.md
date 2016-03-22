@@ -29,3 +29,9 @@ If you do not have the package "devtools", first install it from CRAN with:
 Well, R is what I am most familiar and spend most of my time with. I wanted an easy way to create
 flight plans to use with my favorite aircraft in flightgear (Tu-154B), so R was the natural choice 
 for me. Hopefully it will be useful to other people as well
+
+**Acknowledgement**
+
+In writing these functions I was greatly helped by Ed Williams' 
+[Aviation Formulary](http://williams.best.vwh.net/avform.htm) webpage, to whom I am very grateful
+for compiling such a comprehensive resource.
