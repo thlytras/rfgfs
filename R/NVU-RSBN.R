@@ -95,54 +95,87 @@ corrRSBN <- function(lat1, lon1, lat2, lon2, latB, lonB) {
 #' waypoint names, latitudes, longitudes and ZPY (NVU course). The latter is needed to indirectly
 #' identify the NVU legs, which may not correspond 1:1 to the legs of the flight plan (see
 #' \code{points=} in \code{\link{planNVU}}).
+#'
 #' @param bcLeg A named list of flight plan legs to be corrected by each RSBN beacon. Each list element
 #' should be a vector of flight plan legs, specified either as numbers or as initial fixes, and named
 #' after the beacon ID that should be used for correction. Because RSBN beacon IDs are not always unique,
-#' append the two digits of the channel number to the ID in order to specify the desired beacon.
+#' optionally append the two digits of the channel number to the ID in order to specify the desired beacon.
+#'
+#' If \code{bcLeg=NULL}, all beacons that lie a distance of \code{dlim} kilometers from the flight path 
+#' are used to correct each segment.
+#'
+#' @param dlim Use all beacons that lie \code{dlim} kilometers from the flight path, if \code{bcLeg=NULL}.
+#'
 #' @param cols An optional vector of column names, if these are named differently in \code{plan}
+#'
 #' @return A data.frame of leg-correction pairs. Each row contains the flight plan leg number, start and
 #' end fix, the name, ID and channel of the RSBN beacon, and the correction parameters (Zm, Sm and YK), i.e.
 #' columns \code{Leg}, \code{From}, \code{To}, \code{beaconName}, \code{bcID}, \code{bcChannel}, \code{Zm},
 #' \code{Sm} and \code{YK}.
 #'
 #' @export
-corrPlanRSBN <- function(plan, bcLeg, cols=c("fix","fixLat","fixLon", "ZPY")) {
+corrPlanRSBN <- function(plan, bcLeg=NULL, dlim=150, cols=c("fix","fixLat","fixLon", "ZPY")) {
   a <- plan[, cols]
   names(a) <- c("fix","fixLat","fixLon","ZPY")
   a <- subset(a, !is.na(ZPY))
-  bcLeg <- do.call(rbind, lapply(1:length(bcLeg), function(i)cbind(names(bcLeg)[i],bcLeg[[i]])))
-  for(i in which(is.na(suppressWarnings(as.integer(bcLeg[,2]))))) {
-    bcLeg[i,2] <- match(bcLeg[i,2], a$fix)
+  if (is.null(bcLeg)) {
+    b <- do.call(rbind, lapply(1:(nrow(a)-1), function(i){
+        ld <- spDistsN1(cbind(a$fixLon[i],a$fixLat[i]), cbind(a$fixLon[i+1],a$fixLat[i+1]), longlat=TRUE)
+        d1 <- with(fltData$nav$RSBN, spDistsN1(cbind(lon,lat), cbind(a$fixLon[i],a$fixLat[i]), longlat=TRUE))
+        d2 <- with(fltData$nav$RSBN, spDistsN1(cbind(lon,lat), cbind(a$fixLon[i+1],a$fixLat[i+1]), longlat=TRUE))
+        rd <- as.data.frame(t(apply(fltData$nav$RSBN, 1, function(x){
+            corrRSBN(a[i,"fixLat"], a[i,"fixLon"], a[i+1,"fixLat"], a[i+1,"fixLon"], 
+                as.numeric(x["lat"]), as.numeric(x["lon"]))
+        })))
+        beacons <- which((rd$Sm<0 & ld+rd$Sm>0 & abs(rd$Zm)<dlim) | d1<dlim | d2<dlim)
+        cbind(leg=rep(i, length(beacons)), beacon=beacons)
+    }))
+  } else {
+    b <- do.call(rbind, lapply(1:length(bcLeg), function(i)cbind(names(bcLeg)[i],bcLeg[[i]])))
+    for(i in which(is.na(suppressWarnings(as.integer(b[,2]))))) {
+        b[i,2] <- match(b[i,2], a$fix)
+    }
+    b <- as.data.frame(b, stringsAsFactors = FALSE)
+    names(b) <- c("beacon","leg")
+    b$leg <- as.integer(b$leg)
+    b <- b[!is.na(b$leg) & b$leg<nrow(a),]
+    b <- b[order(b$leg),]
+    bnr <- lapply(substr(b[,"beacon"],1,2), function(x)with(fltData$nav$RSBN, which(id==x)))
+    if (length(which(sapply(bnr, length)==0))) {
+        stop(sprintf("RSBN beacon(s) '%s' not found in the database", 
+            paste(substr(b[,"beacon"],1,2)[which(sapply(bnr,length)==0)], collapse=", ")))
+    }
+    for (i in which(sapply(bnr, length)>1)) {
+        chn <- as.integer(substr(b[i,"beacon"],3,4))
+        if (!is.na(chn)) {
+        if (is.na(match(chn, fltData$nav$RSBN[bnr[[i]], "channel"]))) {
+            stop(sprintf("Can't find a RSBN beacon '%s' emitting on channel %s",
+                substr(b[i,"beacon"],1,2), chn))
+        }
+        bnr[[i]] <- with(fltData$nav$RSBN, which(channel==chn & id==substr(b[i,"beacon"],1,2)))  
+        } else {
+        d <- sapply(bnr[[i]], function(j){ 
+            with(fltData$nav$RSBN, spDistsN1(cbind(lon[j],lat[j]), cbind(a$fixLon[i],a$fixLat[i]), longlat=TRUE))
+        })
+        bnr[[i]] <- bnr[[i]][which(d==min(d))[1]]
+        }
+    }
+    b[,"beacon"] <- unlist(bnr)
   }
-  bcLeg <- as.data.frame(bcLeg, stringsAsFactors = FALSE)
-  names(bcLeg) <- c("beacon","leg")
-  bcLeg$leg <- as.integer(bcLeg$leg)
-  bcLeg <- bcLeg[!is.na(bcLeg$leg) & bcLeg$leg<nrow(a),]
-  bcLeg <- bcLeg[order(bcLeg$leg),]
-  res <- cbind(
-    as.data.frame(t(sapply(1:nrow(bcLeg), function(i) {
-      if (nchar(bcLeg[i,"beacon"])>2) {
-        beacon <- subset(fltData$nav$RSBN, id==substr(bcLeg[i,"beacon"], 1, 2) & channel==as.integer(substr(bcLeg[i,"beacon"], 3, 4)))
-        if (nrow(beacon)==0) stop(sprintf("RSBN beacon '%s' emitting on channel %02d not found in the database", substr(bcLeg[i,"beacon"], 1, 2), substr(bcLeg[i,"beacon"], 3, 4)))
-      } else {
-        beacon <- subset(fltData$nav$RSBN, id==bcLeg[i,"beacon"])
-        if (nrow(beacon)==0) stop(sprintf("RSBN beacon '%s' not found in the database", bcLeg[i,"beacon"]))
-      }
-      leg <- bcLeg[i,"leg"]
-      c("Leg"=leg, "From"=as.character(a[leg,"fix"]), "To"=as.character(a[leg+1,"fix"]),
-        "beaconName"=beacon[1,"name"], "bcID"=beacon[1,"id"], "bcChannel"=beacon[1,"channel"])
-    }))),
-    as.data.frame(t(sapply(1:nrow(bcLeg), function(i) {
-      beacon <- if (nchar(bcLeg[i,"beacon"])>2) {
-        subset(fltData$nav$RSBN, id==substr(bcLeg[i,"beacon"], 1, 2) & channel==as.integer(substr(bcLeg[i,"beacon"], 3, 4)))
-      } else {
-        subset(fltData$nav$RSBN, id==bcLeg[i,"beacon"])
-      }
-      leg <- bcLeg[i,"leg"]
-      corrRSBN(a[leg,"fixLat"], a[leg,"fixLon"], a[leg+1,"fixLat"], a[leg+1,"fixLon"], beacon[1,"lat"], beacon[1,"lon"])
-    }))))
-  for(i in c(1,6)) res[,i] <- as.integer(as.character(res[,i]))
-  for(i in 2:5) res[,i] <- as.character(res[,i])
+  if (nrow(b)==0) {
+    return(data.frame("Leg"=NA, "From"=NA, "To"=NA, "beaconName"=NA, "bcID"=NA, "bcChannel"=NA, 
+        "Zm"=NA, "Sm"=NA, "YK"=NA)[c(),])
+  }
+  res <- cbind(b[,"leg"], a$fix[b[,"leg"]], a$fix[b[,"leg"]+1],
+      fltData$nav$RSBN[b[,"beacon"], c("name","id","channel")],
+      t(apply(b, 1, function(x){
+      corrRSBN(
+          a[x["leg"],"fixLat"], a[x["leg"],"fixLon"], 
+          a[x["leg"]+1,"fixLat"], a[x["leg"]+1,"fixLon"], 
+          fltData$nav$RSBN$lat[x["beacon"]], fltData$nav$RSBN$lon[x["beacon"]])
+      })))
+  names(res) <- c("Leg","From","To","beaconName","bcID","bcChannel","Zm","Sm","YK")
+  rownames(res) <- NULL
   res$beaconName <- gsub(" VORTAC DME", "", res$beaconName)
   res
 }

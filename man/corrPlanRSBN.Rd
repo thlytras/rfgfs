@@ -4,7 +4,8 @@
 \alias{corrPlanRSBN}
 \title{RSBN course correction(s) for a flight plan}
 \usage{
-corrPlanRSBN(plan, bcLeg, cols = c("fix", "fixLat", "fixLon", "ZPY"))
+corrPlanRSBN(plan, bcLeg = NULL, dlim = 150, cols = c("fix", "fixLat",
+  "fixLon", "ZPY"))
 }
 \arguments{
 \item{plan}{A flight plan, as a data.frame. Plans created with \code{\link{planNVU}(..., merge=TRUE)}
@@ -16,7 +17,12 @@ identify the NVU legs, which may not correspond 1:1 to the legs of the flight pl
 \item{bcLeg}{A named list of flight plan legs to be corrected by each RSBN beacon. Each list element
 should be a vector of flight plan legs, specified either as numbers or as initial fixes, and named
 after the beacon ID that should be used for correction. Because RSBN beacon IDs are not always unique,
-append the two digits of the channel number to the ID in order to specify the desired beacon.}
+optionally append the two digits of the channel number to the ID in order to specify the desired beacon.
+
+If \code{bcLeg=NULL}, all beacons that lie a distance of \code{dlim} kilometers from the flight path 
+are used to correct each segment.}
+
+\item{dlim}{Use all beacons that lie \code{dlim} kilometers from the flight path, if \code{bcLeg=NULL}.}
 
 \item{cols}{An optional vector of column names, if these are named differently in \code{plan}}
 }
