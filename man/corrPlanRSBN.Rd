@@ -19,7 +19,7 @@ should be a vector of flight plan legs, specified either as numbers or as initia
 after the beacon ID that should be used for correction. Because RSBN beacon IDs are not always unique,
 optionally append the two digits of the channel number to the ID in order to specify the desired beacon.
 
-If \code{bcLeg=NULL}, all beacons that lie a distance of \code{dlim} kilometers from the flight path 
+If \code{bcLeg=NULL}, all beacons that lie a distance of \code{dlim} kilometers from the flight path
 are used to correct each segment.}
 
 \item{dlim}{Use all beacons that lie \code{dlim} kilometers from the flight path, if \code{bcLeg=NULL}.}

@@ -22,7 +22,7 @@ waypoint names, latitudes and longitudes.}
 }
 \value{
 If \code{merge = FALSE}, returns a matrix with columns \code{ZPY}, \code{S} and \code{da}.
-\code{ZPY} (orthodromic HSI course heading) and \code{S} (course distance, negated) can be fed
+\code{ZPY} (orthodromic HSI course heading) and \code{S} (leg distance, negated) can be fed
 to the NVU panels. \code{da} is the azimuth correction at each waypoint.
 
 If \code{merge = TRUE} the above columns are added to the data.frame \code{plan}.
