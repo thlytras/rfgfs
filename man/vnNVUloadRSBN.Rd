@@ -2,7 +2,7 @@
 % Please edit documentation in R/vn.R
 \name{vnNVUloadRSBN}
 \alias{vnNVUloadRSBN}
-\title{"Virtual Navigator": Load RSBN correction parameters on a Tu-154}
+\title{"Virtual Navigator": Load RSBN correction parameters on a Tu-154B}
 \usage{
 vnNVUloadRSBN(con, legs, row = 1, cols = c("Zm", "Sm", "YK"))
 }
@@ -19,7 +19,7 @@ cross-track distance (Zm), along-track distance (Sm) and map angle (YK).}
 }
 \description{
 Through the FlightGear props (telnet) interface, tune RSBN correction parameters
-on the appropriate devices (B-52 panel, B-8M map angle instrument) of the Tu-154,
+on the appropriate devices (B-52 panel, B-8M map angle instrument) of the Tu-154B,
 taking them from a data.frame of leg-correction pairs (of the type created by
 \code{\link{corrPlanRSBN}}.
 }

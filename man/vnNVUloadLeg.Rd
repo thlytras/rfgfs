@@ -2,7 +2,7 @@
 % Please edit documentation in R/vn.R
 \name{vnNVUloadLeg}
 \alias{vnNVUloadLeg}
-\title{"Virtual Navigator": Tune the Tu-154 NVU to the current leg of a flight plan}
+\title{"Virtual Navigator": Tune the Tu-154B NVU to the current leg of a flight plan}
 \usage{
 vnNVUloadLeg(con, plan, leg, cols = c("fix", "ZPY", "S"))
 }
@@ -20,6 +20,6 @@ If ZPY and S for that leg are \code{NA}, nothing happens.}
 }
 \description{
 Through the FlightGear props (telnet) interface, load the NVU parameters for the
-current leg of a flight plan to the active NVU device of the Tu-154.
+current leg of a flight plan to the active NVU device of the Tu-154B.
 }
 

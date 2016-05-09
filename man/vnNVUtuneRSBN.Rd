@@ -2,7 +2,7 @@
 % Please edit documentation in R/vn.R
 \name{vnNVUtuneRSBN}
 \alias{vnNVUtuneRSBN}
-\title{"Virtual Navigator": Tune RSBN correction parameters on the Tu-154}
+\title{"Virtual Navigator": Tune RSBN correction parameters on the Tu-154B}
 \usage{
 vnNVUtuneRSBN(con, Zm = NA, Sm = NA, YK = NA)
 }
@@ -18,6 +18,6 @@ passing to FlightGear. If \code{NA}, the already tuned YK is not modified.}
 }
 \description{
 Through the FlightGear props (telnet) interface, tune RSBN correction parameters
-on the appropriate devices (B-52 panel, B-8M map angle instrument) of the Tu-154.
+on the appropriate devices (B-52 panel, B-8M map angle instrument) of the Tu-154B.
 }
 

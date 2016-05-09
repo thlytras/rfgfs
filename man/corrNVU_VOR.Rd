@@ -2,7 +2,7 @@
 % Please edit documentation in R/NVU-RSBN.R
 \name{corrNVU_VOR}
 \alias{corrNVU_VOR}
-\title{NVU position correction using VOR}
+\title{Calculate NVU orthodromic coordinates using VOR/DME}
 \usage{
 corrNVU_VOR(plan, leg, VOR, radialTo, dist, S = NA, cols = c("fix",
   "fixLat", "fixLon", "ZPY"))
@@ -39,7 +39,7 @@ argument, an extra element dS is added to the return vector indicating the diffe
 actual (corrected) S minus indicated S. Add dS to the current S indication of the NVU to correct it.
 }
 \description{
-This function corrects NVU position parameters (Z and S) based on
-radial and distance from a VOR
+This function calculates the current NVU orthodromic coordinates
+(Z and S) based on radial and distance from a VOR/DME beacon.
 }
 

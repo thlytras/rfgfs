@@ -2,7 +2,7 @@
 % Please edit documentation in R/vn.R
 \name{vnNVUloadNextLeg}
 \alias{vnNVUloadNextLeg}
-\title{"Virtual Navigator": Tune the Tu-154 NVU to the next leg of a flight plan}
+\title{"Virtual Navigator": Tune the Tu-154B NVU to the next leg of a flight plan}
 \usage{
 vnNVUloadNextLeg(con, plan, leg, cols = c("fix", "ZPY", "S"))
 }
@@ -20,6 +20,6 @@ If ZPY and S for that leg are \code{NA}, nothing happens.}
 }
 \description{
 Through the FlightGear props (telnet) interface, load the NVU parameters for the
-next (i.e. upcoming) leg of a flight plan to the inactive NVU device of the Tu-154.
+next (i.e. upcoming) leg of a flight plan to the inactive NVU device of the Tu-154B.
 }
 

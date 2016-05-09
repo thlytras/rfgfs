@@ -2,7 +2,7 @@
 % Please edit documentation in R/vn.R
 \name{vnNVUtune}
 \alias{vnNVUtune}
-\title{"Virtual Navigator": Tune the Tu-154 NVU system}
+\title{"Virtual Navigator": Tune the Tu-154B NVU system}
 \usage{
 vnNVUtune(con, ZPY = NA, S = NA, Z = NA, active = TRUE)
 }
@@ -21,6 +21,6 @@ inactive device (i.e. tune Sp and Zp).}
 }
 \description{
 Through the FlightGear props (telnet) interface, tune the NVU system
-of the Tu-154 to the required navigational parameters (ZPY, S, Z).
+of the Tu-154B to the required navigational parameters (ZPY, S, Z).
 }
 
