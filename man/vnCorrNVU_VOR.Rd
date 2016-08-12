@@ -25,8 +25,7 @@ waypoint names, orthodromic course headings (ZPY) and leg distances (S).}
 \item{apply}{Tune the active NVU device to the calculated orthodromic coordinates? If \code{FALSE},
 these are returned without adjusting the NVU device.}
 
-\item{cols}{An optional vector of column names, if these are named differently in \code{plan}
-#'}
+\item{cols}{An optional vector of column names, if these are named differently in \code{plan}}
 }
 \description{
 Through the FlightGear props (telnet) interface and on the Tu-154B, obtain

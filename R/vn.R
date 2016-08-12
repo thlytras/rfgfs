@@ -52,7 +52,7 @@ vnNVUtuneRSBN <- function(con, Zm=NA, Sm=NA, YK=NA) {
   if (!is.na(Sm))
     fgfsSet(con, "/fdm/jsbsim/instrumentation/nvu/Spm-active", Sm*1000)
   if (!is.na(YK)) {
-    fgfsSet(con, "/tu154/instrumentation/b-8m/outer", YK %/% 10)
+    fgfsSet(con, "/tu154/instrumentation/b-8m/outer", floor(YK/10)*10)
     fgfsSet(con, "/tu154/instrumentation/b-8m/inner", round((YK %% 10) * 10))
   }
 }
@@ -141,7 +141,7 @@ vnNVUloadRSBN <- function(con, legs, row=1, cols=c("Zm","Sm","YK")) {
 #' @param apply Tune the active NVU device to the calculated orthodromic coordinates? If \code{FALSE},
 #' these are returned without adjusting the NVU device.
 #' @param cols An optional vector of column names, if these are named differently in \code{plan}
-#' #'
+#'
 #' @export
 vnCorrNVU_VOR <- function(con, plan, leg, VOR, UShDB=2, DME=UShDB, apply=TRUE, cols=c("fix","fixLat","fixLon", "ZPY")) {
   if (length(UShDB)!=1 || !(UShDB==1 || UShDB==2))
@@ -207,8 +207,8 @@ vnNVUautoload <- function(con, plan, leg, init=FALSE, poll=10, cols=c("fix","ZPY
   if (i+1==nrow(plan)-1) {
     cat("This is the last leg of the flight plan. Quitting...\n\n")
   } else {
+    cat("Standing by...\n")
     while (TRUE) {
-      cat("Standing by...\n")
       Sys.sleep(poll)
       a <- as.numeric(fgfsGet(con, "/fdm/jsbsim/instrumentation/nvu/active"))
       if (is.na(a))
