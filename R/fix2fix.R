@@ -107,6 +107,7 @@ courseDiff <- function(a, b) {
 #'
 #' @export
 findFixes <- function(x, refPoint=NULL, type=c("airport", "VOR", "TACAN","NDB", "RSBN")) {
+  if (length(type)==1 && type=="all") type <- c("fix", "airport", "VOR", "TACAN","NDB", "RSBN")
   fix <- subset(fltData$fix, fix==x)
   apt <- subset(fltData$apt, icaoCode==x)
   navNDB <- subset(fltData$nav$NDB, id==x)

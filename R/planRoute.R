@@ -6,7 +6,9 @@
 #' @param aptTo Destination airport (4-letter ICAO code).
 #' @param fixFrom Initial departure navfix (after SID procedure). If not supplied manually, the navfix nearest to the departure airport will be chosen automatically, using \code{\link{getAptFix}}.
 #' @param fixTo Final destination navfix (before STAR procedure). If not supplied manually, the navfix nearest to the destination airport will be chosen automatically, using \code{\link{getAptFix}}
-#' @param fixes Optional vector of intermediate navfixes. Use these to speed up the algorithm, or to manually adjust the desired route.
+#' @param fixes Optional vector of intermediate navfixes. Use these to speed up the algorithm,
+#'          or to manually adjust the desired route. If \code{NA}s are inserted between two navfixes,
+#'          then the route is flown straight between them, without following ICAO runways.
 #' @param limitArc If TRUE, only search points at an angle of ±90 degrees towards the destination point in order to speed up the algorithm.
 #' @param narrowArc If TRUE (and also limitArc==TRUE), search at a narrower angle of ±45 degrees towards the destination point.
 #' @return Returns a flight plan stored on a data.frame with the following columns:
