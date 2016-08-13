@@ -22,6 +22,33 @@
 #' @return Returns a data.frame containing the full flight plan, with the same columns as the one
 #' returned by \code{\link{planRoute}}.
 #'
+#' @examples
+#' # Fly from Athens to Ioannina, manually setting the waypoints
+#' plan <- updateRoute(c("LGAV","KOR","PIKAD","IXONI","GARTA","LGIO"))
+#'
+#'
+#' # Create a flight plan from Moscow (Domodedovo) to Norilsk (Alykel)
+#' plan0 <- planRoute("UUDD", "UOOO", "WT", "BI01")
+#'
+#' # We will manually add waypoints for the final appropach
+#' # (taken from the approach plate):
+#'
+#' # Take only the first three columns, and add space before the final row
+#' plan1 <- plan0[c(1:(nrow(plan0)-1), rep(NA,3), nrow(plan0)), 1:3]
+#'
+#' # First waypoint is Norilsk NDB (535 BF):
+#' bf <- findFixes("BF", refPoint=as.list(findApt("UOOO")[,c("lat","lon")]), type="NDB")
+#' plan1[nrow(plan1)-4,] <- bf[,c("id","lat","lon")]
+#'
+#' # Add coordinates manually for the remaining points
+#' plan1[nrow(plan1)-3,] <- list("D10.0 NOR", 69 + 23.2/60, 87 + 42.5/60)
+#' plan1[nrow(plan1)-2,] <- list("D10.8 NOR", 69 + 26.5/60, 87 + 37.5/60)
+#' plan1[nrow(plan1)-1,] <- list(NA, 69 + 24.1/60, 87 + 30/60)
+#'
+#' # Now fill in the rest of the flight plan:
+#' plan2 <- updateRoute(plan1)
+#' print(plan2)
+#'
 #' @export
 updateRoute <- function(plan, cols=c("fix","fixLat","fixLon")) {
   if (class(plan)=="character") {

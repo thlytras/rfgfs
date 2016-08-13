@@ -18,6 +18,33 @@
 #'
 #' If \code{merge = TRUE} the above columns are added to the data.frame \code{plan}.
 #'
+#' @examples
+#' # Fly from Athens to Samos island
+#' plan1 <- planRoute("LGAV", "LGSM", "KEA", "URNIL")
+#' print(plan1)
+#'
+#' # Calculate the data for the NVU
+#' plan1 <- planNVU(plan1, init.mag=TRUE, merge=TRUE)
+#'
+#' # We don't need to split the route into so many NVU legs.
+#' # Let's only focus on waypoints with course changes, and recalculate
+#' #     the NVU data with fewer, more manageable legs:
+#' plan1 <- planNVU(plan1,
+#'                  points = c("LGAV","KEA", "RIPLI", "IKARO", "URNIL"),
+#'                  init.mag=TRUE, merge=TRUE)
+#'
+#'
+#' # Create a flight plan from Moscow (Sheremetyevo) to Tashkent
+#' plan2 <- planRoute("UUEE", "UTTT", "DK", "DODUR")
+#'
+#' # It helps if we visualize the plan, by writing it on a KML file:
+#' makeKml(plan2, "UEEE-UTTT.kml")
+#'
+#' # Calculate the data for the NVU
+#' plan2 <- planNVU(plan2, c("UUEE", "DK", "FV", "QL", "UWPP", "OG", "URL",
+#'                           "KEKUN", "EL", "NKZ", "MIKNO", "DODUR", "UTTT"),
+#'                  init.mag=TRUE, merge=TRUE)
+#'
 #' @export
 planNVU <- function(plan, points=NULL, cols=c("fix","fixLat","fixLon"), init.mag=FALSE, merge=TRUE) {
   if (is.null(points)) points <- 1:nrow(plan)
@@ -112,6 +139,18 @@ corrRSBN <- function(lat1, lon1, lat2, lon2, latB, lonB) {
 #' end fix, the name, ID and channel of the RSBN beacon, and the correction parameters (Zm, Sm and YK), i.e.
 #' columns \code{Leg}, \code{From}, \code{To}, \code{beaconName}, \code{bcID}, \code{bcChannel}, \code{Zm},
 #' \code{Sm} and \code{YK}.
+#'
+#' @examples
+#' # Create a flight plan from Moscow (Sheremetyevo) to Tashkent
+#' plan <- planRoute("UUEE", "UTTT", "DK", "DODUR")
+#'
+#' # Calculate the data for the NVU
+#' plan <- planNVU(plan, c("UUEE", "DK", "FV", "QL", "UWPP", "OG", "URL",
+#'                         "KEKUN", "EL", "NKZ", "MIKNO", "DODUR", "UTTT"),
+#'                 init.mag=TRUE, merge=TRUE)
+#'
+#' # Get data for all RSBNs close to each waypoints
+#' RSBNs <- corrPlanRSBN(plan)
 #'
 #' @export
 corrPlanRSBN <- function(plan, bcLeg=NULL, dlim=150, cols=c("fix","fixLat","fixLon", "ZPY")) {

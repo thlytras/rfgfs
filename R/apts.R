@@ -3,7 +3,7 @@
 #' Get the navaid or navfix nearest to an airport
 #'
 #' \code{getAptFix} finds the navaid or navfix that is closest to a given airport.
-#' 
+#'
 #' @param airport A 4-letter airport ICAO code (character vector of length 1).
 #' @return A string identifying the nearest navfix/navaid. Because identifiers are not globally unique, the string includes a number, which is the difference between latitude and longitude.
 #' @export
@@ -35,6 +35,9 @@ is.apt <- function(x) {
 #'
 #' @param x A character string containing a regular expression to be matched in the airport descriptions.
 #' @return A data.frame of airports found, with columns: "icaoCode", "fullName", "elevation", "lat", "lon".
+#' @examples
+#' findApt("Makedonia")   # Find by description
+#' findApt("LGTS")   # Find by ICAO code
 #' @export
 findApt <- function(x) {
   fltData$apt[unique(c(grep(x, fltData$apt$fullName, ignore.case=TRUE), grep(x, fltData$apt$icaoCode, ignore.case=TRUE))),]

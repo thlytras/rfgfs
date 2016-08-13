@@ -105,6 +105,20 @@ courseDiff <- function(a, b) {
 #' @return A data.frame (with zero rows if no fix is found) with columns \code{lat}, \code{lon}, \code{elev},
 #' \code{freq}, \code{range}, \code{id}, \code{name}, \code{type}.
 #'
+#' @examples
+#' # Find everything coded "SAM"
+#' findFixes("SAM")
+#'
+#' # We got 4 VORs and an airport. Keep only the VORs:
+#' findFixes("SAM", type="VOR")
+#'
+#' # Which one is closest to Athens airport (LGAV)?
+#' findFixes("SAM", refPoint=as.list(findApt("LGAV")[,c("lat","lon")]))
+#'
+#' # Find navigational fixes
+#' findFixes("GARTA", type="fix")
+#' findFixes("GARTA", type="all")
+#'
 #' @export
 findFixes <- function(x, refPoint=NULL, type=c("airport", "VOR", "TACAN","NDB", "RSBN")) {
   if (length(type)==1 && type=="all") type <- c("fix", "airport", "VOR", "TACAN","NDB", "RSBN")
@@ -136,6 +150,7 @@ findFixes <- function(x, refPoint=NULL, type=c("airport", "VOR", "TACAN","NDB", 
     if (length(which(abs(fixes$lat-fixes$lat[i])<0.01 & abs(fixes$lon-fixes$lon[i])<0.01 & fixes$type=="VOR"))>0) j <- c(j, i)
   }
   if (length(j)>0) fixes <- fixes[-j,]
+  fixes <- fixes[fixes$type %in% type,]
   if (nrow(fixes)>0 && !is.null(refPoint)) {
     if (is.null(names(refPoint))) names(refPoint)[1:2] <- c("lat","lon")
     dists <- mapply(function(lat, lon){
@@ -144,6 +159,6 @@ findFixes <- function(x, refPoint=NULL, type=c("airport", "VOR", "TACAN","NDB", 
     fixes <- fixes[which(dists==min(dists)),]
   }
   rownames(fixes) <- NULL
-  fixes[fixes$type %in% type,]
+  fixes
 }
 

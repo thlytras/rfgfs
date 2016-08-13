@@ -31,6 +31,27 @@
 #'  \item{altawy}{Alternative airway for the following segment, along with its permitted flight level range.}
 #' }
 #'
+#' @examples
+#' # Fly from Athens to Thessaloniki
+#' plan1 <- planRoute("LGAV", "LGTS")
+#' print(plan1)
+#'
+#' # Manually choose appropriate departure and approach fixes
+#' # (by referring to the relevant approach plates)
+#' plan2 <- planRoute("LGAV", "LGTS", fixFrom="ABLON", fixTo="LEKPO")
+#' print(plan2)
+#'
+#' # Fly from Athens to Innsbrück
+#' plan3 <- planRoute("LGAV", "LOWI", "KOR", "BRENO")
+#'
+#' # Follow a different route, via Thessaloniki and Belgrade
+#' plan4 <- planRoute("LGAV", "LOWI", "ABLON", "RTT", fixes=c("TSL","ORVAN"))
+#'
+#' # Divert a bit from the ICAO airway (OMIRO -> SKP -> BAMOS -> AGISA)
+#' # and fly over PELAS instead, i.e. over Alonissos instead of Skopelos island.
+#' plan5 <- planRoute("LGAV", "LOWI", "ABLON", "RTT",
+#'                    fixes=c("OMIRO", NA, "PELAS", NA, "AGISA", "TSL","ORVAN"))
+#'
 #' @export
 planRoute <- function(aptFrom, aptTo, fixFrom=NA, fixTo=NA, fixes=character(), limitArc=TRUE, narrowArc=FALSE) {
   # This function is based on Djisktra's algorithm. fltData must be loaded
