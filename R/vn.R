@@ -211,8 +211,10 @@ vnNVUautoload <- function(con, plan, leg, init=FALSE, poll=10, cols=c("fix","ZPY
     while (TRUE) {
       Sys.sleep(poll)
       a <- as.numeric(fgfsGet(con, "/fdm/jsbsim/instrumentation/nvu/active"))
-      if (is.na(a))
-        stop("The NVU device in the simulator has been turned off. Quitting...")
+      if (is.na(a)) {
+        warning("The NVU device in the simulator has been turned off. Quitting...")
+        next
+      }
       if (a!=1 && a!=2)
         stop("Invalid value in property /fdm/jsbsim/instrumentation/nvu/active")
       if (a != activeNVU) {
