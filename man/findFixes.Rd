@@ -22,4 +22,18 @@ This function finds navigational fixes (fixes or navaids) by name (id). If there
 with the same name, they are all returned unless an optional reference point is supplied, in which
 case only the fix nearest to the reference point is returned.
 }
+\examples{
+# Find everything coded "SAM"
+findFixes("SAM")
 
+# We got 4 VORs and an airport. Keep only the VORs:
+findFixes("SAM", type="VOR")
+
+# Which one is closest to Athens airport (LGAV)?
+findFixes("SAM", refPoint=as.list(findApt("LGAV")[,c("lat","lon")]))
+
+# Find navigational fixes
+findFixes("GARTA", type="fix")
+findFixes("GARTA", type="all")
+
+}

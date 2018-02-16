@@ -27,4 +27,3 @@ to bulk data mode, and a help commend is issued. If FlightGear does not
 respond within 5 seconds with the expected help message, the function
 quits with an error. Otherwise the connection object is returned.
 }
-

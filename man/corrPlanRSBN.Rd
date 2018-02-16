@@ -36,4 +36,16 @@ columns \code{Leg}, \code{From}, \code{To}, \code{beaconName}, \code{bcID}, \cod
 This function returns the NVU course correction parameters (Zm, Sm, YK)  for the various
 legs of a flight plan.
 }
+\examples{
+# Create a flight plan from Moscow (Sheremetyevo) to Tashkent
+plan <- planRoute("UUEE", "UTTT", "DK", "DODUR")
 
+# Calculate the data for the NVU
+plan <- planNVU(plan, c("UUEE", "DK", "FV", "QL", "UWPP", "OG", "URL",
+                        "KEKUN", "EL", "NKZ", "MIKNO", "DODUR", "UTTT"),
+                init.mag=TRUE, merge=TRUE)
+
+# Get data for all RSBNs close to each waypoints
+RSBNs <- corrPlanRSBN(plan)
+
+}

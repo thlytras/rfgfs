@@ -70,4 +70,3 @@ plan5 <- planRoute("LGAV", "LOWI", "ABLON", "RTT",
                    fixes=c("OMIRO", NA, "PELAS", NA, "AGISA", "TSL","ORVAN"))
 
 }
-

@@ -20,4 +20,3 @@ A data.frame of beacons found, with columns: \code{lat}, \code{lon}. \code{elev}
 \code{findBeacon} finds navigational beacons in the database by searching for matches in the navaid id or name.
 Internally it uses \code{grep}.
 }
-

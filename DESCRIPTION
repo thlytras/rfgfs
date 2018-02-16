@@ -15,4 +15,4 @@ Description: Automatically plans a route between two airports, using the
     various others. FOR FLIGHT SIMULATION USE ONLY - NOT FOR REAL WORLD NAVIGATION.
 License: GPL (>=2)
 LazyData: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

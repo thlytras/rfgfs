@@ -42,4 +42,3 @@ actual (corrected) S minus indicated S. Add dS to the current S indication of th
 This function calculates the current NVU orthodromic coordinates
 (Z and S) based on radial and distance from a VOR/DME beacon.
 }
-

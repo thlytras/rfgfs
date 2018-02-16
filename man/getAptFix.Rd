@@ -18,4 +18,3 @@ A string identifying the nearest navfix/navaid. Because identifiers are not glob
 \seealso{
 \code{\link{planRoute}}
 }
-

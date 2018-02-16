@@ -24,4 +24,3 @@ Calculates the magnetic declination for a given latitude, longitude and height.
 \details{
 This function uses the NIMA WMM2005 (World Magnetic Model). This is the exact same algorithm that FlightGear (via the SimGear library) uses, and in fact \code{magvar} is a port of the corresponding SimGear C++ function: \url{https://github.com/FlightGear/simgear/blob/next/simgear/magvar/coremag.cxx}
 }
-

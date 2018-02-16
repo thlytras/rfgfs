@@ -21,4 +21,3 @@ Returns the initial orthodromic course in degrees.
 \description{
 This function returs the initial course heading (in degrees) for an orthodromic course between two points.
 }
-

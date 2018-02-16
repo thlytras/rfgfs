@@ -17,4 +17,3 @@ This function returs the difference (in degrees) between two course headings.
 A negative sign means that a is to the left of b, a positive sign means that a is to the right of b.
 Obviously the two course headings should be on the same reference, e.g. both magnetic or both true.
 }
-

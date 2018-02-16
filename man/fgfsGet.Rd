@@ -22,4 +22,3 @@ server does not respond, a character vector of length zero is returned.
 This function reads a property from the FlightGear property tree, via
 the props (telnet) interface
 }
-

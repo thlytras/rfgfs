@@ -19,4 +19,3 @@ A list of data.frames. Each data.frame describes the segments of one airway, and
 \description{
 \code{getAwy} gets detailed airways info from the database. Internally it uses \code{grep}.
 }
-

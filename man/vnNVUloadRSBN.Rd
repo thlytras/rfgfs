@@ -23,4 +23,3 @@ on the appropriate devices (B-52 panel, B-8M map angle instrument) of the Tu-154
 taking them from a data.frame of leg-correction pairs (of the type created by
 \code{\link{corrPlanRSBN}}.
 }
-

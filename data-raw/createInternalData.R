@@ -68,9 +68,18 @@ fltPrepData <- function(){
     names(nav) <- colnames(navTypes)
     colnames(nav$NDB) <- colnames(nav$VORDME) <- colnames(nav$TACAN) <- 
 	    c("lat", "lon", "elev", "freq", "range", "dev", "id", "name")
-    colnames(nav$ILS) <- colnames(nav$LOC) <- colnames(nav$GS) <- 
+    colnames(nav$ILS) <- colnames(nav$LOC) <- colnames(nav$GS) <- colnames(nav$DMEILS) <- 
 	    colnames(nav$OM) <- colnames(nav$MM) <- colnames(nav$IM) <- 
 	    c("lat", "lon", "elev", "freq", "range", "heading", "id", "apt", "awy", "type")
+    # include RSBNs
+    nav$RSBN <- read.fwf("rsbn.dat", diff(navTypes.fields[[1]]), stringsAsFactors=FALSE, strip.white=TRUE)[,-1]
+    nav$RSBN <- nav$RSBN[seq(2,nrow(nav$RSBN),2),-6]
+    colnames(nav$RSBN) <- c("lat", "lon", "elev", "freq", "range", "id", "name")
+    nav$RSBN$channel <- as.integer(gsub("(.*\\sCh)|(VORTAC.*)", "", nav$RSBN$name))   
+    # remove duplicate VORs
+    nav$VOR <- nav$VOR[-which(duplicated(nav$VOR[,-6])),]; rownames(nav$VOR) <- NULL
+    nav$VORDME <- nav$VORDME[-which(duplicated(nav$VORDME[,-6])),]; rownames(nav$VORDME) <- NULL
+    nav$NDB <- nav$NDB[-which(duplicated(nav$NDB[,-6])),]; rownames(nav$NDB) <- NULL
   # All nav points data (taken from airways data)
     cat("Processing all nav points...\n")
     allPts <- rbind(
@@ -208,5 +217,5 @@ mag$roots1[mag$roots1==Inf] <- NA
 
 
 cat("Creating sysdata.rda...\n")
-devtools::use_data(fltData, mag, internal=TRUE)
+devtools::use_data(fltData, mag, internal=TRUE, overwrite=TRUE)
 

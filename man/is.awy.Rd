@@ -18,4 +18,3 @@ Checks if the supplied argument is an airway identifier found in the database.
 \seealso{
 \code{\link{findApt}}, \code{\link{is.apt}}
 }
-

@@ -23,4 +23,3 @@ inactive device (i.e. tune Sp and Zp).}
 Through the FlightGear props (telnet) interface, tune the NVU system
 of the Tu-154B to the required navigational parameters (ZPY, S, Z).
 }
-

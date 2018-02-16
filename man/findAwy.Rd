@@ -15,4 +15,3 @@ A character vector with the name(s) of the airway(s) that include the supplied n
 \description{
 \code{findAwy} finds airways in the database that include the supplied navfix/navaid. Internally it uses \code{grep}.
 }
-

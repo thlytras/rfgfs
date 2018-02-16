@@ -38,4 +38,3 @@ so you can focus on other things. It stops if there's no other leg to be loaded,
 Ctrl-C. For example you can stop it to correct your position with \code{\link{vnCorrNVU_VOR}},
 and then run it again from the current leg.
 }
-

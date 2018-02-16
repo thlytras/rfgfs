@@ -12,4 +12,3 @@ makeKml(fltplans, file, overwrite = TRUE)
 \description{
 This function writes a flight plan to a kml file, suitable for opening and viewing with Google Earth (or other kml viewer).
 }
-

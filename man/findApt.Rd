@@ -15,4 +15,7 @@ A data.frame of airports found, with columns: "icaoCode", "fullName", "elevation
 \description{
 \code{findApt} finds airports in the database by searching for matches in the airport description. Internally it uses \code{grep}.
 }
-
+\examples{
+findApt("Makedonia")   # Find by description
+findApt("LGTS")   # Find by ICAO code
+}

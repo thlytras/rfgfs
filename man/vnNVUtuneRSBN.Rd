@@ -20,4 +20,3 @@ passing to FlightGear. If \code{NA}, the already tuned YK is not modified.}
 Through the FlightGear props (telnet) interface, tune RSBN correction parameters
 on the appropriate devices (B-52 panel, B-8M map angle instrument) of the Tu-154B.
 }
-

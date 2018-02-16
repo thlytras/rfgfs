@@ -18,4 +18,3 @@ Checks if the supplied argument is a valid 4-letter airport ICAO code.
 \seealso{
 \code{\link{findApt}}, \code{\link{is.awy}}
 }
-

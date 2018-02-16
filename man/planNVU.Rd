@@ -32,4 +32,31 @@ This function gets a flight plan as input (i.e. a list of waypoints and
 geographical coordinates) and calculates appropriate data to feed the
 NVU navigational computer of the Tu-154B.
 }
+\examples{
+# Fly from Athens to Samos island
+plan1 <- planRoute("LGAV", "LGSM", "KEA", "URNIL")
+print(plan1)
 
+# Calculate the data for the NVU
+plan1 <- planNVU(plan1, init.mag=TRUE, merge=TRUE)
+
+# We don't need to split the route into so many NVU legs.
+# Let's only focus on waypoints with course changes, and recalculate
+#     the NVU data with fewer, more manageable legs:
+plan1 <- planNVU(plan1,
+                 points = c("LGAV","KEA", "RIPLI", "IKARO", "URNIL"),
+                 init.mag=TRUE, merge=TRUE)
+
+
+# Create a flight plan from Moscow (Sheremetyevo) to Tashkent
+plan2 <- planRoute("UUEE", "UTTT", "DK", "DODUR")
+
+# It helps if we visualize the plan, by writing it on a KML file:
+makeKml(plan2, "UEEE-UTTT.kml")
+
+# Calculate the data for the NVU
+plan2 <- planNVU(plan2, c("UUEE", "DK", "FV", "QL", "UWPP", "OG", "URL",
+                          "KEKUN", "EL", "NKZ", "MIKNO", "DODUR", "UTTT"),
+                 init.mag=TRUE, merge=TRUE)
+
+}

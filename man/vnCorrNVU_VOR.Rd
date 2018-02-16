@@ -33,4 +33,3 @@ radial and distance from a certain VOR/DME beacon, calculate the current
 orthodromic coordinates S and Z, and (optionally) tune them into the active
 NVU device.
 }
-

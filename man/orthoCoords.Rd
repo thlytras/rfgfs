@@ -27,4 +27,3 @@ the S coordinate of the departure point).
 \description{
 This function is used in NVU calculations and corrections.
 }
-

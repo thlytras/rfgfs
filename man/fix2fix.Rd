@@ -21,4 +21,3 @@ Returns a vector of identifiers corresponding to the determined route.
 \description{
 This function determines the shortest route between two points (navfixes/navaids)
 }
-

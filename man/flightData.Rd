@@ -25,4 +25,3 @@ from the data files that ship with FlightGear (version 3.4), using the function
 \code{parseFlightData} that is included in the package source. They are used in 
 almost all functions in the rfgfs package.
 }
-

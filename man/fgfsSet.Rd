@@ -23,4 +23,3 @@ This function sets a FlightGear property via the props (telnet) interface.
 This value does no error checking. If the property you try to
 set does not exist on the tree, failure is silent.
 }
-

@@ -22,4 +22,3 @@ If ZPY and S for that leg are \code{NA}, nothing happens.}
 Through the FlightGear props (telnet) interface, load the NVU parameters for the
 next (i.e. upcoming) leg of a flight plan to the inactive NVU device of the Tu-154B.
 }
-

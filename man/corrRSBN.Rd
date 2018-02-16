@@ -23,4 +23,3 @@ the start point, the end point and the RSBN beacon.
 \details{
 This function is used by \code{corrPlanRSBN()}.
 }
-
